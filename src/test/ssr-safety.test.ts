@@ -19,5 +19,9 @@ describe("SSR safety", () => {
     expect(typeof mod.Button).toBe("function");
     expect(typeof mod.Input).toBe("function");
     expect(typeof mod.Card).toBe("function");
+    expect(typeof mod.TextField).toBe("object"); // forwardRef component
+    expect(typeof mod.PasswordField).toBe("object"); // forwardRef component
+    expect(typeof mod.FormError).toBe("function");
+    expect(typeof mod.SubmitButton).toBe("object"); // forwardRef component
   });
 });

@@ -7,8 +7,23 @@ Shared React + TypeScript UI component library, published to GitHub Packages.
 - **Button** — a basic button with `variant` (`primary` | `secondary` | `ghost`) and `size` (`small` | `medium` | `large`) props.
 - **Input** — a basic text input with an optional `label` and `error` message.
 - **Card** — a basic container with optional `title` and `footer`.
+- **TextField** — a Tailwind-styled, ref-forwarding native `<input>` built for react-hook-form's `register()` (no `Controller` needed). Renders a `FormError` when passed an `error` message.
+- **PasswordField** — a `TextField` locked to `type="password"`. Takes an explicit `autoComplete` prop (e.g. `"current-password"` vs `"new-password"`) rather than hardcoding one.
+- **FormError** — a small, muted-red message for a single field error. Renders nothing when no message is passed.
+- **SubmitButton** — a Tailwind-styled submit button with an `isLoading` prop that disables it and shows a spinner.
 
 None of the components read from `window`/`document` at module scope, so the package is safe to import from server-rendering consumers (e.g. Next.js).
+
+### Styling
+
+`TextField`, `PasswordField`, `FormError` and `SubmitButton` follow the shadcn/ui pattern: Tailwind utility classes (merged via the `cn` helper in `src/lib/utils.ts`, built on `clsx` + `tailwind-merge`) referencing a small set of CSS custom properties (`--background`, `--foreground`, `--border`, `--primary`, `--destructive`, etc.), defined for local development/Storybook in `src/styles/globals.css`.
+
+This package does not ship compiled CSS. Consumer apps own their Tailwind pipeline and must:
+
+1. Include this package's compiled output in their `tailwind.config.js` `content` globs, and
+2. Define the same CSS custom properties (or their own values for them) in a global stylesheet.
+
+`radix-ui` is included as a dependency for building future, more complex form controls (e.g. Select, Dropdown) that need it — the current form field components are plain native elements and don't depend on it directly.
 
 ## Development
 

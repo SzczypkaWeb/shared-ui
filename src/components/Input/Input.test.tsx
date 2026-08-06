@@ -57,4 +57,24 @@ describe("Input", () => {
     render(<Input label="Password" type="password" />);
     expect(screen.getByLabelText("Password")).toHaveAttribute("type", "password");
   });
+
+  describe("Tailwind styling", () => {
+    it("applies Tailwind input classes instead of a semantic 'suib-input__control' class", () => {
+      render(<Input label="Email" id="email" />);
+      const input = screen.getByLabelText("Email");
+      expect(input.className).toEqual(expect.stringContaining("rounded-md"));
+      expect(input.className).toEqual(expect.stringContaining("border-input"));
+    });
+
+    it("applies destructive border/ring classes when an error is present", () => {
+      render(<Input label="Username" error="Required" />);
+      const input = screen.getByLabelText("Username");
+      expect(input.className).toEqual(expect.stringContaining("border-destructive"));
+    });
+
+    it("no longer applies the legacy suib-input BEM classes", () => {
+      const { container } = render(<Input label="Email" error="Required" />);
+      expect(container.innerHTML).not.toMatch(/suib-/);
+    });
+  });
 });

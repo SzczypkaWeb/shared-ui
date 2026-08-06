@@ -31,4 +31,35 @@ describe("Card", () => {
     const { container } = render(<Card className="extra">Body</Card>);
     expect(container.firstElementChild?.className).toContain("extra");
   });
+
+  describe("Tailwind styling", () => {
+    it("applies Tailwind container classes to the root instead of a semantic 'suib-card' class", () => {
+      const { container } = render(<Card>Body</Card>);
+      const root = container.firstElementChild;
+      expect(root?.className).toEqual(expect.stringContaining("rounded-lg"));
+      expect(root?.className).toEqual(expect.stringContaining("border-border"));
+      expect(root?.className).toEqual(expect.stringContaining("bg-background"));
+    });
+
+    it("applies Tailwind heading classes to the title", () => {
+      render(<Card title="Card title">Body</Card>);
+      const heading = screen.getByRole("heading", { name: "Card title" });
+      expect(heading.className).toEqual(expect.stringContaining("font-semibold"));
+    });
+
+    it("separates the footer from the body with a top border", () => {
+      render(<Card footer={<span>Footer text</span>}>Body</Card>);
+      const footer = screen.getByText("Footer text").parentElement;
+      expect(footer?.className).toEqual(expect.stringContaining("border-t"));
+    });
+
+    it("no longer applies the legacy suib-card BEM classes", () => {
+      const { container } = render(
+        <Card title="T" footer="F">
+          Body
+        </Card>
+      );
+      expect(container.innerHTML).not.toMatch(/suib-/);
+    });
+  });
 });

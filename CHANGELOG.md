@@ -1,5 +1,15 @@
 # @szczypkaweb/shared-ui
 
+## 0.2.0
+
+### Minor Changes
+
+- Migrate to Tailwind CSS v4 and publish the design tokens as a real shared stylesheet.
+
+  - `src/styles/globals.css` is now part of the published package (`@szczypkaweb/shared-ui/globals.css`) instead of being Storybook-only. Consumer apps should `@import "@szczypkaweb/shared-ui/globals.css";` in their own global stylesheet instead of hand-copying the CSS variables.
+  - **Breaking for consumers**: requires Tailwind CSS v4 (`@theme`/`@custom-variant` syntax). Apps still on Tailwind v3 must migrate before picking up this version.
+  - `tailwind.config.cjs` removed — v4 is CSS-first, no JS config needed for these tokens anymore.
+
 ## 0.1.0
 
 ### Minor Changes

@@ -16,12 +16,14 @@ None of the components read from `window`/`document` at module scope, so the pac
 
 ### Styling
 
-`TextField`, `PasswordField`, `FormError` and `SubmitButton` follow the shadcn/ui pattern: Tailwind utility classes (merged via the `cn` helper in `src/lib/utils.ts`, built on `clsx` + `tailwind-merge`) referencing a small set of CSS custom properties (`--background`, `--foreground`, `--border`, `--primary`, `--destructive`, etc.), defined for local development/Storybook in `src/styles/globals.css`.
+`TextField`, `PasswordField`, `FormError` and `SubmitButton` follow the shadcn/ui pattern: Tailwind utility classes (merged via the `cn` helper in `src/lib/utils.ts`, built on `clsx` + `tailwind-merge`) referencing a small set of CSS custom properties (`--background`, `--foreground`, `--border`, `--primary`, `--destructive`, etc.), defined in `src/styles/globals.css`.
 
-This package does not ship compiled CSS. Consumer apps own their Tailwind pipeline and must:
+This package targets **Tailwind CSS v4**. It does not ship compiled CSS — consumer apps own their own Tailwind pipeline and must:
 
-1. Include this package's compiled output in their `tailwind.config.js` `content` globs, and
-2. Define the same CSS custom properties (or their own values for them) in a global stylesheet.
+1. `@import "@szczypkaweb/shared-ui/globals.css";` in their own global stylesheet (this is the real, shared source of the design tokens — don't hand-copy the CSS variables into consumer apps, that's exactly the drift this export exists to prevent), and
+2. Point Tailwind's content/`@source` detection at this package's compiled output (`node_modules/@szczypkaweb/shared-ui/dist`), so utility classes used inside shared-ui's components are actually generated in the consumer's CSS.
+
+Consumer apps must be on Tailwind CSS v4 (`@theme`/`@import "tailwindcss"` syntax) to use `globals.css` — see the `minor` changeset from the v4 migration for details.
 
 `radix-ui` is included as a dependency for building future, more complex form controls (e.g. Select, Dropdown) that need it — the current form field components are plain native elements and don't depend on it directly.
 

@@ -1,5 +1,5 @@
 ## UI Library
-- Tailwind CSS + Radix UI primitives (shadcn/ui pattern) - components are copied in as owned source code, not installed as a dependency.
+- Tailwind CSS v4 + Radix UI primitives (shadcn/ui pattern) - components are copied in as owned source code, not installed as a dependency.
 - Simple text inputs (TextField, PasswordField) are native <input> elements styled with Tailwind, wired via plain react-hook-form register() (Controller is only needed for complex Radix components like Select/Dropdown).
 - Validation is always done via Zod, regardless of the underlying component.
-- In consumer apps (frontend-shell, react-app), make sure tailwind.config.js `content` includes the compiled @projekt/shared-ui output - otherwise classes used inside shared-ui won't be generated in the consumer's CSS.
+- Design tokens live in `src/styles/globals.css`, published as `@szczypkaweb/shared-ui/globals.css`. Consumer apps (frontend-shell, react-app, next-app) `@import` it directly instead of redefining the CSS variables themselves, and must point Tailwind's `@source`/content detection at the compiled `@szczypkaweb/shared-ui/dist` output - otherwise classes used inside shared-ui won't be generated in the consumer's CSS.

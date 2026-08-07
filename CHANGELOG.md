@@ -1,5 +1,11 @@
 # @szczypkaweb/shared-ui
 
+## 0.3.0
+
+### Minor Changes
+
+- Convert Card and Input to Tailwind utility classes (drop legacy `suib-*` classes, which were left unstyled after the Tailwind v4 migration). Add a shared postcss preset, published as `@szczypkaweb/shared-ui/postcss.config`, so consuming apps don't duplicate the postcss config.
+
 ## 0.2.0
 
 ### Minor Changes

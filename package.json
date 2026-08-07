@@ -15,11 +15,13 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./globals.css": "./src/styles/globals.css"
+    "./globals.css": "./src/styles/globals.css",
+    "./postcss.config": "./src/postcss-preset.cjs"
   },
   "files": [
     "dist",
-    "src/styles"
+    "src/styles",
+    "src/postcss-preset.cjs"
   ],
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",

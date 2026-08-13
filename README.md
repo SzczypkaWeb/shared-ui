@@ -69,3 +69,4 @@ npm run changeset:publish
 Publishing targets GitHub Packages under the `@szczypkaweb` scope (see `.npmrc` and `publishConfig` in `package.json`). Authentication requires a `GITHUB_TOKEN` environment variable with `write:packages` permission.
 
 This repository is set up for local development only for now — publishing is intentionally not part of this initial bootstrap.
+/

@@ -1,0 +1,31 @@
+name: CI
+
+# Runs lint/typecheck/test/build as a required PR check (branch protection).
+# Separate from release.yml on purpose: release.yml is push-to-main only (it
+# publishes packages and opens the changesets "Version Packages" PR) and
+# should never run on a PR from an unmerged branch.
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@szczypkaweb'
+
+      - name: Install dependencies
+        run: npm install
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

@@ -23,5 +23,8 @@ describe("SSR safety", () => {
     expect(typeof mod.PasswordField).toBe("object"); // forwardRef component
     expect(typeof mod.FormError).toBe("function");
     expect(typeof mod.SubmitButton).toBe("object"); // forwardRef component
+    expect(typeof mod.Select).toBe("object"); // forwardRef component, wraps Radix UI's Select
+    expect(typeof mod.TextArea).toBe("object"); // forwardRef component
+    expect(typeof mod.StatusBadge).toBe("function");
   });
 });

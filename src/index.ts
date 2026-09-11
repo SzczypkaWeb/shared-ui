@@ -18,3 +18,12 @@ export type { FormErrorProps } from "./components/FormError";
 
 export { SubmitButton } from "./components/SubmitButton";
 export type { SubmitButtonProps } from "./components/SubmitButton";
+
+export { Select } from "./components/Select";
+export type { SelectProps, SelectOption } from "./components/Select";
+
+export { TextArea } from "./components/TextArea";
+export type { TextAreaProps } from "./components/TextArea";
+
+export { StatusBadge } from "./components/StatusBadge";
+export type { StatusBadgeProps, StatusBadgeStatus } from "./components/StatusBadge";

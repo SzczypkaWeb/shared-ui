@@ -29,14 +29,47 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: '@szczypkaweb'
 
+      # The repo's real lockfile is pnpm-lock.yaml (see pnpm-workspace.yaml's
+      # allowBuilds/minimumReleaseAgeExclude settings) - this job used to run
+      # plain `npm install`/`npm test`/`npm build`, which "worked" for
+      # build/test (npm just ignores pnpm-lock.yaml and resolves its own
+      # tree) but broke the moment changeset:publish actually ran for real:
+      # @changesets/cli detects the package manager from the lockfile present
+      # in the repo, sees pnpm-lock.yaml, and shells out to `pnpm publish` -
+      # which doesn't exist on the runner without this step, hence
+      # `spawn pnpm ENOENT`. Same fix/reasoning as react-app/frontend-shell's
+      # "Enable Corepack (pnpm)" step. Ordered after setup-node (not before,
+      # like the first attempt at this fix) to match the already-working
+      # react-app/frontend-shell workflows - corepack should enable against
+      # the Node version setup-node just activated, not whatever was default
+      # before it ran.
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      # pnpm deliberately ignores `${GITHUB_TOKEN}` in a committed .npmrc
+      # (this repo's own .npmrc has `//npm.pkg.github.com/:_authToken=
+      # ${GITHUB_TOKEN}`) regardless of whether the env var is set - a
+      # project-level .npmrc is "untrusted" for credentials, since someone
+      # could swap it and steal the token via a substituted registry (see
+      # the "Ignored project-level auth setting..." warning / pnpm.io/npmrc).
+      # Same workaround already used in react-app/frontend-shell: set it
+      # explicitly via `pnpm config set` (user-level config) before install.
+      # Not needed for THIS install (shared-ui doesn't depend on any other
+      # @szczypkaweb package), but IS needed further down for `pnpm publish`
+      # to actually authenticate against npm.pkg.github.com.
+      - name: Configure registry auth
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm build
 
       - name: Test
-        run: npm test
+        run: pnpm test
 
       # If there are pending changesets on main: opens/updates a "Version
       # Packages" PR with the version bump + changelog, doesn't publish yet.
@@ -45,8 +78,8 @@ jobs:
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
         with:
-          publish: npm run changeset:publish
-          version: npm run changeset:version
+          publish: pnpm changeset:publish
+          version: pnpm changeset:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

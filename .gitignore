@@ -1,4 +1,10 @@
 node_modules/
+# This repo's real lockfile is pnpm-lock.yaml - package-lock.json was a
+# stray artifact from CI/local `npm install` runs before the pnpm-based
+# workflows were fixed (see release.yml/ci.yml), and its presence alongside
+# pnpm-lock.yaml is exactly what let @changesets/cli's package-manager
+# detection go ambiguous. Ignored so it can't get silently re-committed.
+package-lock.json
 dist/
 storybook-static/
 coverage/

@@ -23,6 +23,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      # The repo's real lockfile is pnpm-lock.yaml (see pnpm-workspace.yaml's
+      # allowBuilds/minimumReleaseAgeExclude settings) - this job used to run
+      # plain `npm install`/`npm test`/`npm build`, which "worked" for
+      # build/test (npm just ignores pnpm-lock.yaml and resolves its own
+      # tree) but broke the moment changeset:publish actually ran for real:
+      # @changesets/cli detects the package manager from the lockfile present
+      # in the repo, sees pnpm-lock.yaml, and shells out to `pnpm publish` -
+      # which doesn't exist on the runner without this step, hence
+      # `spawn pnpm ENOENT`. Same fix/reasoning as react-app/frontend-shell's
+      # "Enable Corepack (pnpm)" step.
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -30,13 +43,13 @@ jobs:
           scope: '@szczypkaweb'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm build
 
       - name: Test
-        run: npm test
+        run: pnpm test
 
       # If there are pending changesets on main: opens/updates a "Version
       # Packages" PR with the version bump + changelog, doesn't publish yet.
@@ -45,8 +58,8 @@ jobs:
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
         with:
-          publish: npm run changeset:publish
-          version: npm run changeset:version
+          publish: pnpm changeset:publish
+          version: pnpm changeset:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

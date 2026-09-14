@@ -14,22 +14,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Same fix as release.yml - the repo's real lockfile is
-      # pnpm-lock.yaml, plain `npm install` here was silently resolving a
-      # different dependency tree than what actually gets built/published.
-      - name: Enable Corepack (pnpm)
-        run: corepack enable
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: https://npm.pkg.github.com
           scope: '@szczypkaweb'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # Same fix as release.yml - the repo's real lockfile is
+      # pnpm-lock.yaml, plain `npm install` here was silently resolving a
+      # different dependency tree than what actually gets built/published.
+      # After setup-node, not before, so corepack enables against the Node
+      # version it just activated.
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      # See the matching comment in release.yml - pnpm ignores a committed
+      # .npmrc's ${GITHUB_TOKEN} interpolation by design. Harmless for THIS
+      # install (shared-ui has no @szczypkaweb dependency of its own), but
+      # added for consistency so it doesn't silently break the moment that
+      # stops being true.
+      - name: Configure registry auth
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - run: pnpm lint
       - run: pnpm typecheck

@@ -23,6 +23,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@szczypkaweb'
+
       # The repo's real lockfile is pnpm-lock.yaml (see pnpm-workspace.yaml's
       # allowBuilds/minimumReleaseAgeExclude settings) - this job used to run
       # plain `npm install`/`npm test`/`npm build`, which "worked" for
@@ -32,15 +38,29 @@ jobs:
       # in the repo, sees pnpm-lock.yaml, and shells out to `pnpm publish` -
       # which doesn't exist on the runner without this step, hence
       # `spawn pnpm ENOENT`. Same fix/reasoning as react-app/frontend-shell's
-      # "Enable Corepack (pnpm)" step.
+      # "Enable Corepack (pnpm)" step. Ordered after setup-node (not before,
+      # like the first attempt at this fix) to match the already-working
+      # react-app/frontend-shell workflows - corepack should enable against
+      # the Node version setup-node just activated, not whatever was default
+      # before it ran.
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com
-          scope: '@szczypkaweb'
+      # pnpm deliberately ignores `${GITHUB_TOKEN}` in a committed .npmrc
+      # (this repo's own .npmrc has `//npm.pkg.github.com/:_authToken=
+      # ${GITHUB_TOKEN}`) regardless of whether the env var is set - a
+      # project-level .npmrc is "untrusted" for credentials, since someone
+      # could swap it and steal the token via a substituted registry (see
+      # the "Ignored project-level auth setting..." warning / pnpm.io/npmrc).
+      # Same workaround already used in react-app/frontend-shell: set it
+      # explicitly via `pnpm config set` (user-level config) before install.
+      # Not needed for THIS install (shared-ui doesn't depend on any other
+      # @szczypkaweb package), but IS needed further down for `pnpm publish`
+      # to actually authenticate against npm.pkg.github.com.
+      - name: Configure registry auth
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

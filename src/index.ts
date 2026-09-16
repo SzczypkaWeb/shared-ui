@@ -34,6 +34,9 @@ export type { StatusRowProps } from "./components/StatusRow";
 export { SidePanel } from "./components/SidePanel";
 export type { SidePanelProps } from "./components/SidePanel";
 
+export { Modal } from "./components/Modal";
+export type { ModalProps } from "./components/Modal";
+
 export { Spinner } from "./components/Spinner";
 export type { SpinnerProps, SpinnerSize } from "./components/Spinner";
 

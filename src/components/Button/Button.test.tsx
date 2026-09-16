@@ -213,4 +213,45 @@ describe("Button", () => {
       expect(button.className).toContain("custom-class");
     });
   });
+
+  describe("text wrapping and flex-shrink behavior", () => {
+    // A Button placed next to a Select/other flex sibling in a constrained
+    // `flex` container must never wrap its label onto two lines, and a flex
+    // parent must not be able to compress it below its natural content
+    // width - a Button always sizes to fit its label.
+    it("never allows the label to wrap (whitespace-nowrap)", () => {
+      render(<Button>Click me</Button>);
+      expect(screen.getByRole("button", { name: "Click me" })).toHaveClass("whitespace-nowrap");
+    });
+
+    it("defaults to shrink-0 so flex siblings cannot compress it", () => {
+      render(<Button>Click me</Button>);
+      expect(screen.getByRole("button", { name: "Click me" })).toHaveClass("shrink-0");
+    });
+
+    it("applies whitespace-nowrap and shrink-0 across all variants", () => {
+      const variants = ["primary", "secondary", "ghost"] as const;
+      for (const variant of variants) {
+        const { unmount } = render(<Button variant={variant}>{variant}</Button>);
+        const button = screen.getByRole("button", { name: variant });
+        expect(button).toHaveClass("whitespace-nowrap");
+        expect(button).toHaveClass("shrink-0");
+        unmount();
+      }
+    });
+
+    it("still allows a consumer to override wrapping/shrinking via className", () => {
+      render(
+        <Button className="whitespace-normal shrink">
+          Click me
+        </Button>
+      );
+      const button = screen.getByRole("button", { name: "Click me" });
+      // twMerge resolves the conflicting utility - the consumer's override wins.
+      expect(button.className).not.toContain("whitespace-nowrap");
+      expect(button.className).not.toMatch(/(?:^|\s)shrink-0(?:\s|$)/);
+      expect(button).toHaveClass("whitespace-normal");
+      expect(button).toHaveClass("shrink");
+    });
+  });
 });

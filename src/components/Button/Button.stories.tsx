@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "./Button";
+import { Select } from "../Select";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
@@ -45,4 +46,24 @@ export const Disabled: Story = {
     disabled: true,
     children: "Disabled button",
   },
+};
+
+/**
+ * Regression story for a constrained flex container (e.g. a Button next to a
+ * Select): the label must never wrap onto two lines, and the flex parent
+ * must not compress the Button below its natural content width.
+ */
+export const InConstrainedFlexContainer: Story = {
+  render: () => (
+    <div className="flex w-64 gap-4">
+      <Select
+        options={[
+          { label: "Apple", value: "apple" },
+          { label: "Banana", value: "banana" },
+        ]}
+        placeholder="Select a fruit"
+      />
+      <Button>Save changes</Button>
+    </div>
+  ),
 };

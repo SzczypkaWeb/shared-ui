@@ -45,49 +45,63 @@ describe("Button", () => {
   });
 
   describe("Tailwind variant classes", () => {
-    it("applies primary variant as a literal Tailwind class string", () => {
+    // These assert semantic design-token classes (bg-primary, bg-secondary,
+    // ...) rather than hardcoded Tailwind palette classes (bg-blue-600,
+    // bg-gray-200, ...), because only the token-backed classes repaint when
+    // an ancestor toggles the `.dark` class - see globals.css's `.dark`
+    // override block and `@custom-variant dark`.
+    it("applies primary variant using semantic design tokens", () => {
       render(<Button variant="primary">Primary</Button>);
       const button = screen.getByRole("button", { name: "Primary" });
-      // Verify the exact literal class string for primary variant
       expect(button.className).toEqual(
-        expect.stringContaining("bg-blue-600")
+        expect.stringContaining("bg-primary")
       );
       expect(button.className).toEqual(
-        expect.stringContaining("text-white")
+        expect.stringContaining("text-primary-foreground")
       );
       expect(button.className).toEqual(
-        expect.stringContaining("hover:bg-blue-700")
+        expect.stringContaining("hover:bg-primary/90")
       );
     });
 
-    it("applies secondary variant as a literal Tailwind class string", () => {
+    it("applies secondary variant using semantic design tokens", () => {
       render(<Button variant="secondary">Secondary</Button>);
       const button = screen.getByRole("button", { name: "Secondary" });
-      // Verify the exact literal class string for secondary variant
       expect(button.className).toEqual(
-        expect.stringContaining("bg-gray-200")
+        expect.stringContaining("bg-secondary")
       );
       expect(button.className).toEqual(
-        expect.stringContaining("text-gray-900")
+        expect.stringContaining("text-secondary-foreground")
       );
       expect(button.className).toEqual(
-        expect.stringContaining("hover:bg-gray-300")
+        expect.stringContaining("hover:bg-secondary/80")
       );
     });
 
-    it("applies ghost variant as a literal Tailwind class string", () => {
+    it("applies ghost variant using semantic design tokens", () => {
       render(<Button variant="ghost">Ghost</Button>);
       const button = screen.getByRole("button", { name: "Ghost" });
-      // Verify the exact literal class string for ghost variant
       expect(button.className).toEqual(
         expect.stringContaining("bg-transparent")
       );
       expect(button.className).toEqual(
-        expect.stringContaining("text-gray-700")
+        expect.stringContaining("hover:bg-accent")
       );
       expect(button.className).toEqual(
-        expect.stringContaining("hover:bg-gray-100")
+        expect.stringContaining("hover:text-accent-foreground")
       );
+    });
+
+    it("never renders hardcoded Tailwind palette classes that would not respond to the dark variant", () => {
+      const variants = ["primary", "secondary", "ghost"] as const;
+      const hardcodedPalettePattern = /\b(?:bg|text|hover:bg|hover:text|active:bg|disabled:bg|disabled:text)-(?:blue|gray|red|green|amber|emerald|slate|zinc|neutral|stone)-\d{2,3}\b/;
+
+      for (const variant of variants) {
+        const { unmount } = render(<Button variant={variant}>{variant}</Button>);
+        const button = screen.getByRole("button", { name: variant });
+        expect(button.className).not.toMatch(hardcodedPalettePattern);
+        unmount();
+      }
     });
   });
 
@@ -144,8 +158,8 @@ describe("Button", () => {
       const button = screen.getByRole("button", { name: "Default" });
       expect(button).toHaveAttribute("type", "button");
       // Primary variant classes
-      expect(button.className).toContain("bg-blue-600");
-      expect(button.className).toContain("text-white");
+      expect(button.className).toContain("bg-primary");
+      expect(button.className).toContain("text-primary-foreground");
       // Medium size classes
       expect(button.className).toContain("px-4");
       expect(button.className).toContain("py-2");
@@ -161,8 +175,8 @@ describe("Button", () => {
       );
       const button = screen.getByRole("button", { name: "Secondary Small" });
       // Secondary variant
-      expect(button.className).toContain("bg-gray-200");
-      expect(button.className).toContain("text-gray-900");
+      expect(button.className).toContain("bg-secondary");
+      expect(button.className).toContain("text-secondary-foreground");
       // Small size
       expect(button.className).toContain("px-3");
       expect(button.className).toContain("py-1");
@@ -177,7 +191,7 @@ describe("Button", () => {
       const button = screen.getByRole("button", { name: "Ghost Large" });
       // Ghost variant
       expect(button.className).toContain("bg-transparent");
-      expect(button.className).toContain("text-gray-700");
+      expect(button.className).toContain("hover:bg-accent");
       // Large size
       expect(button.className).toContain("px-6");
       expect(button.className).toContain("py-3");
@@ -193,7 +207,7 @@ describe("Button", () => {
       );
       const button = screen.getByRole("button", { name: "Styled" });
       // Should contain base classes
-      expect(button.className).toContain("bg-blue-600");
+      expect(button.className).toContain("bg-primary");
       expect(button.className).toContain("px-4");
       // And custom class
       expect(button.className).toContain("custom-class");

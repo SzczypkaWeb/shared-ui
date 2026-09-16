@@ -39,4 +39,21 @@ describe("StatusBadge", () => {
     render(<StatusBadge status="failed" className="custom-class" />);
     expect(screen.getByText("Failed")).toHaveClass("custom-class");
   });
+
+  describe("dark mode support", () => {
+    // StatusBadge's per-status colors are a bespoke palette (one hue per
+    // status) that doesn't map onto the shared semantic tokens, so - per the
+    // theming contract - each status class string must carry its own
+    // explicit `dark:` Tailwind variants rather than relying on a
+    // `.dark`-scoped CSS custom property.
+    it.each(Object.keys(expectedLabels) as StatusBadgeStatus[])(
+      "includes a dark: background and text variant for status %s",
+      (status) => {
+        render(<StatusBadge status={status} />);
+        const badge = screen.getByText(expectedLabels[status]);
+        expect(badge.className).toMatch(/dark:bg-\S+/);
+        expect(badge.className).toMatch(/dark:text-\S+/);
+      }
+    );
+  });
 });

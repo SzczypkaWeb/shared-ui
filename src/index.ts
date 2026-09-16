@@ -30,3 +30,9 @@ export type { StatusBadgeProps, StatusBadgeStatus } from "./components/StatusBad
 
 export { StatusRow } from "./components/StatusRow";
 export type { StatusRowProps } from "./components/StatusRow";
+
+export { Spinner } from "./components/Spinner";
+export type { SpinnerProps, SpinnerSize } from "./components/Spinner";
+
+export { Link } from "./components/Link";
+export type { LinkProps } from "./components/Link";

@@ -27,5 +27,7 @@ describe("SSR safety", () => {
     expect(typeof mod.TextArea).toBe("object"); // forwardRef component
     expect(typeof mod.StatusBadge).toBe("function");
     expect(typeof mod.StatusRow).toBe("function");
+    expect(typeof mod.Spinner).toBe("function");
+    expect(typeof mod.Link).toBe("function");
   });
 });

@@ -76,7 +76,7 @@ jobs:
       # If that PR was just merged (no pending changesets, version already
       # bumped): runs the publish command instead.
       - name: Create Release Pull Request or Publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           publish: pnpm changeset:publish
           version: pnpm changeset:version

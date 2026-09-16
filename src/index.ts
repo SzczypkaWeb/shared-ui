@@ -30,3 +30,6 @@ export type { StatusBadgeProps, StatusBadgeStatus } from "./components/StatusBad
 
 export { StatusRow } from "./components/StatusRow";
 export type { StatusRowProps } from "./components/StatusRow";
+
+export { SidePanel } from "./components/SidePanel";
+export type { SidePanelProps } from "./components/SidePanel";

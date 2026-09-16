@@ -27,3 +27,6 @@ export type { TextAreaProps } from "./components/TextArea";
 
 export { StatusBadge } from "./components/StatusBadge";
 export type { StatusBadgeProps, StatusBadgeStatus } from "./components/StatusBadge";
+
+export { StatusRow } from "./components/StatusRow";
+export type { StatusRowProps } from "./components/StatusRow";

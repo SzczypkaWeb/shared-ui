@@ -116,7 +116,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
           aria-invalid={error ? true : undefined}
           aria-describedby={errorId}
           className={cn(
-            "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
+            "flex h-10 w-full items-center justify-between rounded-lg border border-input bg-transparent px-3 py-2 text-sm ring-offset-background",
             "placeholder:text-muted-foreground",
             "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             "disabled:cursor-not-allowed disabled:opacity-50",
@@ -135,7 +135,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
             position="popper"
             sideOffset={4}
             className={cn(
-              "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-background text-foreground shadow-md",
+              "relative z-50 w-[var(--radix-select-trigger-width)] min-w-[8rem] overflow-hidden rounded-lg border border-border bg-transparent text-foreground shadow-md",
               "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
             )}
           >

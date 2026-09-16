@@ -45,6 +45,24 @@ export const Preselected: Story = {
   },
 };
 
+/** The open dropdown's width should match this narrow trigger exactly. */
+export const NarrowTrigger: Story = {
+  render: (args) => (
+    <div className="w-32">
+      <Select {...args} />
+    </div>
+  ),
+};
+
+/** The open dropdown's width should match this wide trigger exactly. */
+export const WideTrigger: Story = {
+  render: (args) => (
+    <div className="w-[32rem]">
+      <Select {...args} />
+    </div>
+  ),
+};
+
 const formSchema = z.object({
   fruit: z.string().min(1, "Please select a fruit"),
 });

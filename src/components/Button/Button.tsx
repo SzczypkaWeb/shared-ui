@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "../../lib/utils";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 export type ButtonSize = "small" | "medium" | "large";
@@ -12,10 +13,6 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   size?: ButtonSize;
   /** Native button type attribute. Defaults to "button" (not "submit"). */
   type?: "button" | "submit" | "reset";
-}
-
-function joinClassNames(...classNames: Array<string | undefined | false>): string {
-  return classNames.filter(Boolean).join(" ");
 }
 
 /**
@@ -49,9 +46,16 @@ const sizeClasses: Record<ButtonSize, string> = {
 /**
  * Base Tailwind classes applied to all buttons.
  * This is a literal string that will be picked up by Tailwind's content scanner.
+ *
+ * `whitespace-nowrap` + `shrink-0`: a Button always sizes to fit its label -
+ * it must never wrap onto two lines nor be compressed below its natural
+ * content width when placed alongside other elements (e.g. a Select) in a
+ * constrained flex container. Both are still overridable via the `className`
+ * prop, since `cn()` (twMerge) resolves the conflicting utility in favor of
+ * whichever one appears later in the merged class list.
  */
 const baseClasses =
-  "inline-flex items-center justify-center font-medium rounded border border-transparent cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center font-medium rounded border border-transparent cursor-pointer whitespace-nowrap shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed";
 
 /**
  * A basic, framework-agnostic button component.
@@ -76,7 +80,7 @@ export function Button({
     <button
       type={type}
       disabled={disabled}
-      className={joinClassNames(baseClasses, variantClasses[variant], sizeClasses[size], className)}
+      className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)}
       {...rest}
     >
       {children}

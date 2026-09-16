@@ -15,6 +15,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmit": true,
+    // tsup's .d.ts bundling step (rollup-plugin-dts) builds its own internal
+    // TS program and sets `baseUrl` itself for module resolution - our own
+    // tsconfig never set it. TS 6.0 turned the long-standing baseUrl
+    // deprecation warning into a hard build error (TS5101), which broke the
+    // dts build even though nothing in this repo actually depends on
+    // baseUrl. This is the escape hatch TS itself documents for the
+    // transition period before baseUrl is removed entirely in TS 7.0 -
+    // remove this once tsup/rollup-plugin-dts ship a TS7-compatible release.
+    "ignoreDeprecations": "6.0",
     "types": ["vitest/globals", "@testing-library/jest-dom", "node"]
   },
   "include": ["src", ".storybook"]

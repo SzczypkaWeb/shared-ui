@@ -23,7 +23,7 @@ importers:
         version: 2.31.1
       '@hookform/resolvers':
         specifier: ^5.9.1
-        version: 5.9.1(react-hook-form@7.84.0(react@18.3.1))(zod@4.6.4)
+        version: 5.9.1(react-hook-form@7.88.0(react@18.3.1))(zod@4.6.4)
       '@storybook/addon-essentials':
         specifier: ^8.3.6
         version: 8.6.14(@types/react@18.3.31)(storybook@8.6.18(prettier@2.8.8))
@@ -80,7 +80,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       react-hook-form:
         specifier: ^7.84.0
-        version: 7.84.0(react@18.3.1)
+        version: 7.88.0(react@18.3.1)
       storybook:
         specifier: ^8.3.6
         version: 8.6.18(prettier@2.8.8)
@@ -3539,8 +3539,8 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-hook-form@7.84.0:
-    resolution: {integrity: sha512-+hWvQP6GLco56mDwrbU4XnHix8t1z90ltZsDIrREl+jnQFQxYLX8oAzqe/Xn8nHpmoXTY5M6oEXrAhbP1qevNQ==}
+  react-hook-form@7.88.0:
+    resolution: {integrity: sha512-QRaLOWhX93YCnMiRfnOFRSwWXZNt8qhm2JTZwypoDvKpSffTJHmpzMXt8U6PV5UThvL3IiiLDUWe2nHMtz6Mmw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -4741,10 +4741,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@hookform/resolvers@5.9.1(react-hook-form@7.84.0(react@18.3.1))(zod@4.6.4)':
+  '@hookform/resolvers@5.9.1(react-hook-form@7.88.0(react@18.3.1))(zod@4.6.4)':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.84.0(react@18.3.1)
+      react-hook-form: 7.88.0(react@18.3.1)
     optionalDependencies:
       zod: 4.6.4
 
@@ -7699,7 +7699,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-hook-form@7.84.0(react@18.3.1):
+  react-hook-form@7.88.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 

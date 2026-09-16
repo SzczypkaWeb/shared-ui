@@ -24,7 +24,7 @@
     // transition period before baseUrl is removed entirely in TS 7.0 -
     // remove this once tsup/rollup-plugin-dts ship a TS7-compatible release.
     "ignoreDeprecations": "6.0",
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"]
   },
   "include": ["src", ".storybook"]
 }

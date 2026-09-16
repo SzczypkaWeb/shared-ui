@@ -62,10 +62,11 @@ describe("SidePanel", () => {
   });
 
   describe("Tailwind styling", () => {
-    it("applies Tailwind container classes using semantic design tokens", () => {
+    it("uses a transparent background so it blends into the page as chrome, not a floating surface", () => {
       const { container } = render(<SidePanel>Content</SidePanel>);
       const root = container.firstElementChild;
-      expect(root?.className).toEqual(expect.stringContaining("bg-background"));
+      expect(root?.className).toEqual(expect.stringContaining("bg-transparent"));
+      expect(root?.className).not.toEqual(expect.stringContaining("bg-background"));
       expect(root?.className).toEqual(expect.stringContaining("text-foreground"));
     });
 

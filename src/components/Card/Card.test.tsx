@@ -62,4 +62,50 @@ describe("Card", () => {
       expect(container.innerHTML).not.toMatch(/suib-/);
     });
   });
+
+  describe("padding prop", () => {
+    it("applies default padding (px-6 py-6) when no title or footer, and no padding prop", () => {
+      const { container } = render(<Card>Body content</Card>);
+      // Get the second child of the root (first is no title, second is content)
+      const contentDiv = container.firstElementChild?.children[0] as HTMLElement;
+      expect(contentDiv?.className).toContain("px-6");
+      expect(contentDiv?.className).toContain("py-6");
+    });
+
+    it("applies default padding (px-6 pb-6) when title is present and no padding prop", () => {
+      const { container } = render(<Card title="Title">Body content</Card>);
+      // Get the content div (second child after title)
+      const contentDiv = container.firstElementChild?.children[1] as HTMLElement;
+      expect(contentDiv?.className).toContain("px-6");
+      expect(contentDiv?.className).toContain("pb-6");
+      expect(contentDiv?.className).not.toContain("py-6");
+    });
+
+    it("applies compact padding (p-4) when padding='compact' is set, without title", () => {
+      const { container } = render(<Card padding="compact">Body content</Card>);
+      const contentDiv = container.firstElementChild?.children[0] as HTMLElement;
+      expect(contentDiv?.className).toContain("p-4");
+      expect(contentDiv?.className).not.toContain("px-6");
+      expect(contentDiv?.className).not.toContain("py-6");
+    });
+
+    it("applies compact padding (p-4) when padding='compact' is set, with title", () => {
+      const { container } = render(
+        <Card title="Title" padding="compact">
+          Body content
+        </Card>
+      );
+      const contentDiv = container.firstElementChild?.children[1] as HTMLElement;
+      expect(contentDiv?.className).toContain("p-4");
+      expect(contentDiv?.className).not.toContain("px-6");
+      expect(contentDiv?.className).not.toContain("pb-6");
+    });
+
+    it("defaults to 'default' padding when padding prop is undefined", () => {
+      const { container } = render(<Card padding="default">Body content</Card>);
+      const contentDiv = container.firstElementChild?.children[0] as HTMLElement;
+      expect(contentDiv?.className).toContain("px-6");
+      expect(contentDiv?.className).toContain("py-6");
+    });
+  });
 });

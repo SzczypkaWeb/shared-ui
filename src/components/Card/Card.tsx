@@ -8,6 +8,13 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   /** Optional content rendered in a footer area at the bottom of the card. */
   footer?: ReactNode;
+  /**
+   * Controls the padding of the content area.
+   * - "default": Spacious padding (px-6 py-6/pb-6) suitable for most layouts.
+   * - "compact": Reduced padding (p-4) suitable for dense contexts like scrollable lists.
+   * @default "default"
+   */
+  padding?: "default" | "compact";
 }
 
 /**
@@ -20,7 +27,13 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
  * relied on a hand-authored stylesheet that no longer exists post-Tailwind
  * migration, so they rendered unstyled).
  */
-export function Card({ title, footer, children, className, ...rest }: CardProps) {
+export function Card({ title, footer, children, className, padding = "default", ...rest }: CardProps) {
+  // Determine content padding classes based on the padding prop
+  const contentPaddingClasses =
+    padding === "compact"
+      ? "p-4"
+      : cn("px-6", title ? "pb-6" : "py-6");
+
   return (
     <div
       className={cn("rounded-lg border border-border bg-background text-foreground shadow-sm", className)}
@@ -29,7 +42,7 @@ export function Card({ title, footer, children, className, ...rest }: CardProps)
       {title ? (
         <h3 className="px-6 pt-6 pb-4 text-lg font-semibold leading-none tracking-tight">{title}</h3>
       ) : null}
-      <div className={cn("px-6", title ? "pb-6" : "py-6")}>{children}</div>
+      <div className={contentPaddingClasses}>{children}</div>
       {footer ? <div className="border-t border-border px-6 py-4">{footer}</div> : null}
     </div>
   );

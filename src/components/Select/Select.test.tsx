@@ -100,7 +100,7 @@ describe("Select", () => {
       expect(trigger).not.toHaveClass("bg-background");
     });
 
-    it("uses rounded-lg corners and a transparent background on the open content", async () => {
+    it("uses rounded-lg corners and an opaque background on the open content, since it floats over arbitrary page content", async () => {
       const user = userEvent.setup();
       render(<Select options={options} placeholder="Pick a fruit" />);
 
@@ -108,9 +108,9 @@ describe("Select", () => {
       const listbox = await screen.findByRole("listbox");
 
       expect(listbox).toHaveClass("rounded-lg");
-      expect(listbox).toHaveClass("bg-transparent");
+      expect(listbox).toHaveClass("bg-background");
       expect(listbox).toHaveClass("border-border");
-      expect(listbox).not.toHaveClass("bg-background");
+      expect(listbox).not.toHaveClass("bg-transparent");
     });
   });
 });

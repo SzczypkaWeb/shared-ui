@@ -17,13 +17,20 @@ export interface SidePanelProps extends HTMLAttributes<HTMLDivElement> {
  *
  * Does not implement any virtualization, pagination, or list-item rendering
  * logic—purely a layout shell for reuse in different layouts. Uses semantic
- * Tailwind design tokens (bg-background, border-border, text-foreground)
- * and is SSR-safe (no window/document access at module scope).
+ * Tailwind design tokens (border-border, text-foreground) and is SSR-safe
+ * (no window/document access at module scope).
+ *
+ * Unlike floating surfaces such as `Card` or `Modal`'s content card, the
+ * panel is page chrome, not something that needs to separate itself from
+ * arbitrary content behind it - it renders as part of the page's own
+ * background, so the root uses `bg-transparent` rather than the opaque
+ * `bg-background` surface token. The sticky title bar keeps `bg-background`
+ * so scrolling content doesn't show through it as the list scrolls beneath.
  */
 export function SidePanel({ title, children, className, ...rest }: SidePanelProps) {
   return (
     <div
-      className={cn("w-72 h-full flex flex-col bg-background border-r border-border text-foreground", className)}
+      className={cn("w-72 h-full flex flex-col bg-transparent border-r border-border text-foreground", className)}
       {...rest}
     >
       {title ? (

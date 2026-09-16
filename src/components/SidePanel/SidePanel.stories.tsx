@@ -52,3 +52,39 @@ export const WithMinimalContent: Story = {
     ),
   },
 };
+
+/**
+ * The panel is page chrome, not a floating card - its root uses
+ * `bg-transparent` so it blends into whatever page background it's dropped
+ * into, rather than reading as a separate opaque surface. This story places
+ * it over a visibly non-white/non-black page background so that blending
+ * (vs. an opaque rectangle showing through) can be verified directly, and
+ * checks that the sticky title bar, border, and text all stay legible once
+ * the panel itself has no fill of its own. Toggle the toolbar's dark mode to
+ * verify both themes.
+ */
+export const OverPageBackground: Story = {
+  decorators: [
+    (Story) => (
+      <div
+        style={{
+          display: "flex",
+          height: "600px",
+          border: "1px solid #ddd",
+        }}
+        className="bg-muted"
+      >
+        <Story />
+        <div className="flex-1 p-6 text-sm text-muted-foreground">
+          Surrounding page content, rendered on the same background the panel sits on top of. The
+          panel should blend into this background rather than showing up as a distinct filled
+          rectangle.
+        </div>
+      </div>
+    ),
+  ],
+  args: {
+    title: "Panel Title",
+    children: loremItems,
+  },
+};

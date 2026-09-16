@@ -135,7 +135,12 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
             position="popper"
             sideOffset={4}
             className={cn(
-              "relative z-50 w-[var(--radix-select-trigger-width)] min-w-[8rem] overflow-hidden rounded-lg border border-border bg-transparent text-foreground shadow-md",
+              // Unlike the trigger (a form control, correctly bg-transparent so it
+              // blends into its parent surface), this is a portaled popover that
+              // floats on top of arbitrary page content - it needs the opaque
+              // bg-background surface token, same as Card/Modal's content card,
+              // or whatever is behind it bleeds through the open dropdown.
+              "relative z-50 w-[var(--radix-select-trigger-width)] min-w-[8rem] overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-md",
               "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
             )}
           >

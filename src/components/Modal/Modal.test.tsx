@@ -135,6 +135,24 @@ describe("Modal", () => {
       expect(dialog).toHaveClass("top-1/2");
     });
 
+    it("does not carry a conflicting `relative` position utility alongside `fixed`", () => {
+      // Regression test: `fixed` and `relative` both set CSS `position` on the
+      // same element with no twMerge/cn() deduplication between them, so
+      // whichever wins is determined by Tailwind's generated rule order, not
+      // class order in the attribute. Having `relative` in the base classes
+      // could silently override `fixed`, breaking centering. `fixed` alone is
+      // already a containing block for `position: absolute` descendants (the
+      // close button), so `relative` should never be present here.
+      render(
+        <Modal open onOpenChange={() => {}}>
+          <p>Body</p>
+        </Modal>
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveClass("fixed");
+      expect(dialog).not.toHaveClass("relative");
+    });
+
     it("scrolls long content inside the card instead of overflowing the viewport", () => {
       render(
         <Modal open onOpenChange={() => {}}>
@@ -144,6 +162,91 @@ describe("Modal", () => {
       const dialog = screen.getByRole("dialog");
       expect(dialog).toHaveClass("max-h-[85vh]");
       expect(dialog).toHaveClass("overflow-y-auto");
+    });
+  });
+
+  describe("size prop", () => {
+    it("defaults to the 'md' size (centered card, max-w-md) when no size is given", () => {
+      render(
+        <Modal open onOpenChange={() => {}}>
+          <p>Body</p>
+        </Modal>
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveClass("fixed");
+      expect(dialog).toHaveClass("left-1/2");
+      expect(dialog).toHaveClass("top-1/2");
+      expect(dialog).toHaveClass("-translate-x-1/2");
+      expect(dialog).toHaveClass("-translate-y-1/2");
+      expect(dialog).toHaveClass("max-w-md");
+      expect(dialog).toHaveClass("max-h-[85vh]");
+      expect(dialog).toHaveClass("overflow-y-auto");
+      expect(dialog).not.toHaveClass("relative");
+    });
+
+    it('renders the "md" size explicitly the same as the default', () => {
+      render(
+        <Modal open size="md" onOpenChange={() => {}}>
+          <p>Body</p>
+        </Modal>
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveClass("fixed");
+      expect(dialog).toHaveClass("left-1/2");
+      expect(dialog).toHaveClass("top-1/2");
+      expect(dialog).toHaveClass("max-w-md");
+      expect(dialog).toHaveClass("max-h-[85vh]");
+      expect(dialog).toHaveClass("overflow-y-auto");
+    });
+
+    it('renders the "lg" size as a wider centered card', () => {
+      render(
+        <Modal open size="lg" onOpenChange={() => {}}>
+          <p>Body</p>
+        </Modal>
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveClass("fixed");
+      expect(dialog).toHaveClass("left-1/2");
+      expect(dialog).toHaveClass("top-1/2");
+      expect(dialog).toHaveClass("-translate-x-1/2");
+      expect(dialog).toHaveClass("-translate-y-1/2");
+      expect(dialog).toHaveClass("max-w-3xl");
+      expect(dialog).not.toHaveClass("max-w-md");
+      expect(dialog).toHaveClass("max-h-[85vh]");
+      expect(dialog).toHaveClass("overflow-y-auto");
+    });
+
+    it('renders the "full" size as a near-fullscreen card anchored via inset, without centering math', () => {
+      render(
+        <Modal open size="full" onOpenChange={() => {}}>
+          <p>Body</p>
+        </Modal>
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveClass("fixed");
+      expect(dialog).toHaveClass("inset-4");
+      expect(dialog).toHaveClass("sm:inset-8");
+      expect(dialog).toHaveClass("max-w-none");
+      expect(dialog).toHaveClass("overflow-y-auto");
+      expect(dialog).not.toHaveClass("left-1/2");
+      expect(dialog).not.toHaveClass("top-1/2");
+      expect(dialog).not.toHaveClass("-translate-x-1/2");
+      expect(dialog).not.toHaveClass("-translate-y-1/2");
+      expect(dialog).not.toHaveClass("max-w-md");
+      expect(dialog).not.toHaveClass("max-w-3xl");
+      expect(dialog).not.toHaveClass("relative");
+    });
+
+    it("still forwards a custom className alongside size-based classes", () => {
+      render(
+        <Modal open size="lg" onOpenChange={() => {}} className="extra-class">
+          <p>Body</p>
+        </Modal>
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toHaveClass("extra-class");
+      expect(dialog).toHaveClass("max-w-3xl");
     });
   });
 });

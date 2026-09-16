@@ -20,12 +20,20 @@ function joinClassNames(...classNames: Array<string | undefined | false>): strin
 
 /**
  * Tailwind class strings for each variant.
- * These are literal strings that will be picked up by Tailwind's content scanner.
+ * These are literal strings that will be picked up by Tailwind's content
+ * scanner. They reference the semantic design tokens from globals.css
+ * (bg-primary, bg-secondary, bg-accent, ...) rather than hardcoded palette
+ * classes (bg-blue-600, bg-gray-200, ...), so the button repaints
+ * automatically when an ancestor toggles the `.dark` class - no
+ * theme-related props/logic needed here.
  */
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-400 transition-colors",
-  secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400 disabled:bg-gray-100 transition-colors",
-  ghost: "bg-transparent text-gray-700 hover:bg-gray-100 active:bg-gray-200 disabled:text-gray-400 transition-colors",
+  primary:
+    "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 disabled:bg-primary/50 transition-colors",
+  secondary:
+    "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70 disabled:bg-secondary/50 transition-colors",
+  ghost:
+    "bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80 disabled:text-muted-foreground transition-colors",
 };
 
 /**

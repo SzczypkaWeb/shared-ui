@@ -76,7 +76,7 @@ describe("Link", () => {
     });
 
     it("renders an external link icon after the children", () => {
-      const { container } = render(
+      render(
         <Link href="https://example.com" external={true}>
           External Link
         </Link>
@@ -87,7 +87,7 @@ describe("Link", () => {
     });
 
     it("renders the icon as an inline element after the text", () => {
-      const { container } = render(
+      render(
         <Link href="https://example.com" external={true}>
           Visit site
         </Link>

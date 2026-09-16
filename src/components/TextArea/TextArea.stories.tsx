@@ -40,3 +40,29 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+
+/** Starts tall and demonstrates that it auto-grows further while typing. */
+export const AutoGrow: Story = {
+  args: {
+    defaultValue: "Line one\nLine two\nLine three",
+  },
+};
+
+/**
+ * Content well beyond the default 320px cap - the textarea should stop
+ * growing and fall back to internal scrolling instead of pushing the rest
+ * of the page down indefinitely.
+ */
+export const CappedWithScroll: Story = {
+  args: {
+    defaultValue: Array.from({ length: 30 }, (_, i) => `Line ${i + 1}`).join("\n"),
+  },
+};
+
+/** A lower maxHeight caps growth sooner. */
+export const CustomMaxHeight: Story = {
+  args: {
+    maxHeight: 120,
+    defaultValue: Array.from({ length: 15 }, (_, i) => `Line ${i + 1}`).join("\n"),
+  },
+};

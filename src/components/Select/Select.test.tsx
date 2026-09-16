@@ -74,4 +74,43 @@ describe("Select", () => {
     render(<Select options={options} />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
+
+  describe("dropdown width", () => {
+    it("sizes the open content to track the trigger's width via the Radix CSS variable, not just a fixed min-width", async () => {
+      const user = userEvent.setup();
+      render(<Select options={options} placeholder="Pick a fruit" />);
+
+      await user.click(screen.getByRole("combobox"));
+      const listbox = await screen.findByRole("listbox");
+
+      expect(listbox).toHaveClass("w-[var(--radix-select-trigger-width)]");
+      // Fallback floor for very narrow triggers, kept alongside the tracking width.
+      expect(listbox).toHaveClass("min-w-[8rem]");
+    });
+  });
+
+  describe("visual tokens", () => {
+    it("uses rounded-lg corners and a transparent background on the trigger", () => {
+      render(<Select options={options} placeholder="Pick a fruit" />);
+      const trigger = screen.getByRole("combobox");
+
+      expect(trigger).toHaveClass("rounded-lg");
+      expect(trigger).toHaveClass("bg-transparent");
+      expect(trigger).toHaveClass("border-input");
+      expect(trigger).not.toHaveClass("bg-background");
+    });
+
+    it("uses rounded-lg corners and a transparent background on the open content", async () => {
+      const user = userEvent.setup();
+      render(<Select options={options} placeholder="Pick a fruit" />);
+
+      await user.click(screen.getByRole("combobox"));
+      const listbox = await screen.findByRole("listbox");
+
+      expect(listbox).toHaveClass("rounded-lg");
+      expect(listbox).toHaveClass("bg-transparent");
+      expect(listbox).toHaveClass("border-border");
+      expect(listbox).not.toHaveClass("bg-background");
+    });
+  });
 });
